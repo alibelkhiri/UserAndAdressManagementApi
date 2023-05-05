@@ -1,4 +1,4 @@
-package com.abscript.brightcodingspringv2.Entity;
+package com.abscript.brightcodingspringv2.entity;
 
 import java.io.Serializable;
 

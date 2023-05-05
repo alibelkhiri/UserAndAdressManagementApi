@@ -6,12 +6,12 @@ import org.apache.tomcat.jni.User;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.abscript.brightcodingspringv2.Entity.UserEntity;
 import com.abscript.brightcodingspringv2.dto.UserDto;
+import com.abscript.brightcodingspringv2.entity.UserEntity;
+import com.abscript.brightcodingspringv2.exceptions.UserException;
 import com.abscript.brightcodingspringv2.repository.UserRepository;
 import com.abscript.brightcodingspringv2.services.UserService;
 import com.abscript.brightcodingspringv2.shared.Utils;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUser(String email) {
         UserEntity userEntity=userRepository.findByEmail(email);
         if(userEntity==null){
-            System.out.println("User not found");
+            throw new UserException(email+" this email not found");
         }
         UserDto userDto=new UserDto();
         BeanUtils.copyProperties(userEntity, userDto);
@@ -69,6 +69,45 @@ public class UserServiceImpl implements UserService {
         usersDto.add(userDto);
       }
       return usersDto;
+    }
+
+
+
+    @Override
+    public UserDto getUserByUserId(String userId) {
+      UserEntity userEntity=userRepository.findByUserId(userId);
+      if(userEntity==null){
+        throw new UserException(userId+" this userId not found");
+    }
+    UserDto userDto=new UserDto();
+    BeanUtils.copyProperties(userEntity, userDto);
+      return userDto;
+    }
+
+
+
+    @Override
+    public UserDto updateUser(String userId, UserDto userDto) {
+      UserEntity userEntity=userRepository.findByUserId(userId);
+      if(userEntity==null){
+        throw new UsernameNotFoundException(userId+" this userId not found");
+      }
+      userEntity.setFirstName(userDto.getFirstName());
+      userEntity.setLastName(userDto.getLastName());
+      UserEntity updatedUser=userRepository.save(userEntity);
+      UserDto updatedUserDto=new UserDto();
+      BeanUtils.copyProperties(updatedUser, updatedUserDto);
+      return updatedUserDto;
+    }
+
+
+
+    @Override
+    public void deleteUser(String userId) {
+      UserEntity userEntity= userRepository.findByUserId(userId);
+      if(userEntity==null){ throw new UserException("UserNotFound");}
+      userRepository.delete(userEntity);
+      
     }
     
 }

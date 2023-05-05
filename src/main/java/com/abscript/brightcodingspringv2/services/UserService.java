@@ -10,4 +10,7 @@ public interface UserService{
    UserDto createUser(UserDto userDto);
    UserDto getUser(String email);
    ArrayList<UserDto> getAllUsers();
+   UserDto getUserByUserId(String userId);
+   UserDto updateUser(String id, UserDto user);
+   void deleteUser(String userId);
 }

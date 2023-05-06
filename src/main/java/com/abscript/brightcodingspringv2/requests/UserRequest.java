@@ -1,13 +1,28 @@
 package com.abscript.brightcodingspringv2.requests;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class UserRequest {
+    @NotBlank(message = "first name must not be null")
+    @Size(min=3,message = "this attribute must has more than 3 carachters!")
     private String firstName;
+    @NotNull(message = "last name must not be null")
+    @Size(min=3)
     private String lastName;
+    @NotNull(message = "email name must not be null")
+    @Email
     private String email;
+    @NotNull
+    @Size(min=8,max = 12)
+    @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$",message = "password doit avoir des Maj et min et numero")
     private String password;
     public String getFirstName() {
         return firstName;
-    }
+    } 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

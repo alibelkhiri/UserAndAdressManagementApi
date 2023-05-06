@@ -2,10 +2,14 @@ package com.abscript.brightcodingspringv2.services.impl;
 
 import java.util.ArrayList;
 
-import org.apache.tomcat.jni.User;
+
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -60,9 +64,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ArrayList<UserDto> getAllUsers() {
+    public ArrayList<UserDto> getAllUsers(int page, int limit) {
+      if(page>0)page-=1;
       ArrayList<UserDto> usersDto=new ArrayList<>();
-      var users=userRepository.findAll();
+      Pageable pageableRequest=PageRequest.of(page, limit);
+      Page<UserEntity> userPage=userRepository.findAll(pageableRequest);
+      var users=userPage.getContent();
       for(UserEntity user: users){
         UserDto userDto=new UserDto();
         BeanUtils.copyProperties(user, userDto);

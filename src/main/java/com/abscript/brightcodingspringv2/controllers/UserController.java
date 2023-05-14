@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,10 @@ public class UserController {
     public ResponseEntity<UsersResponse> getUser(@PathVariable String id){
         UserDto userDto=userService.getUserByUserId(id);
         UsersResponse usersResponse=new UsersResponse();
-        BeanUtils.copyProperties(userDto, usersResponse);
-        return new ResponseEntity<UsersResponse>(usersResponse,HttpStatus.CREATED);
+        ModelMapper modelMapper=new ModelMapper();
+        usersResponse=modelMapper.map(userDto, UsersResponse.class);
+        //BeanUtils.copyProperties(userDto, usersResponse);
+        return new ResponseEntity<>(usersResponse,HttpStatus.CREATED);
     }
     @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ArrayList<UsersResponse>> getUsers(@RequestParam(value = "page",defaultValue = "1") int page,@RequestParam(value = "limit",defaultValue = "10") int limit){
@@ -54,12 +57,15 @@ public class UserController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UsersResponse> createUser(@RequestBody @Valid UserRequest userRequest){
-        UserDto userDto=new UserDto();
-        BeanUtils.copyProperties(userRequest, userDto);
+       // UserDto userDto=new UserDto();
+       ModelMapper modelMapper=new ModelMapper();
+       //we replaced the BeanUtils.copyProperties by the modelMapper
+       UserDto userDto=modelMapper.map(userRequest, UserDto.class); 
+      // BeanUtils.copyProperties(userRequest, userDto);
         UserDto createdUser=userService.createUser(userDto);
         UsersResponse usersResponse=new UsersResponse();
-        BeanUtils.copyProperties(createdUser, usersResponse);
-        return new ResponseEntity<UsersResponse>(usersResponse,HttpStatus.CREATED);
+        usersResponse=modelMapper.map(createdUser, UsersResponse.class);
+        return new ResponseEntity<>(usersResponse,HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{id}")
@@ -69,7 +75,7 @@ public class UserController {
         UsersResponse usersResponse=new UsersResponse();
         UserDto updatedUser=userService.updateUser(id, recivedUserDto);
         BeanUtils.copyProperties(updatedUser, usersResponse);
-        return new ResponseEntity<UsersResponse>(usersResponse,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(usersResponse,HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path = "/{id}")

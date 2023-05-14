@@ -1,5 +1,7 @@
 package com.abscript.brightcodingspringv2.requests;
 
+import java.util.List;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,6 +22,13 @@ public class UserRequest {
     @Size(min=8,max = 12)
     @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$",message = "password doit avoir des Maj et min et numero")
     private String password;
+    private List<AddressRequest> addresses;
+    public List<AddressRequest> getAddresses() {
+        return addresses;
+    }
+    public void setAddresses(List<AddressRequest> addresses) {
+        this.addresses = addresses;
+    }
     public String getFirstName() {
         return firstName;
     } 

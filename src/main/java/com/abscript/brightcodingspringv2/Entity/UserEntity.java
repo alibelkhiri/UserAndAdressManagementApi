@@ -2,10 +2,14 @@ package com.abscript.brightcodingspringv2.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import java.util.List;
 
 
 @Entity(name = "users")
@@ -26,7 +30,9 @@ public class UserEntity implements Serializable{
     @Column(nullable = true)
     private String emailVerificationToken;
     private Boolean emailVerificationStatus=false;
-   
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<AddressEntity> addresses;
+
     public Long getId() {
         return id;
     }

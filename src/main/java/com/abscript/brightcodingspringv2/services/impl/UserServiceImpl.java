@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 import java.util.List;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,15 +38,17 @@ public class UserServiceImpl implements UserService {
        UserEntity foundUser= userRepository.findByEmail(userDto.getEmail());
        if(foundUser!=null) throw new RuntimeException("User alrady exists!"); 
        UserEntity userEntity=new UserEntity();
-
-        BeanUtils.copyProperties(userDto, userEntity);
+       ModelMapper modelMapper=new ModelMapper();
+      userEntity=modelMapper.map(foundUser, UserEntity.class);
+        //BeanUtils.copyProperties(userDto, userEntity);
         userEntity.setEncryptedPassword(userDto.getPassword());
         userEntity.setUserId(util.generateUserId(32));
 
         UserEntity createdUser=userRepository.save(userEntity);
         
         UserDto userDto2=new UserDto();
-        BeanUtils.copyProperties(createdUser, userDto2);
+        //BeanUtils.copyProperties(createdUser, userDto2);
+        userDto2=modelMapper.map(createdUser, UserDto.class);
         return userDto2;  
     }
 

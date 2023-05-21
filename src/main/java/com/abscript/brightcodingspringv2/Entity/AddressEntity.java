@@ -30,7 +30,7 @@ public class AddressEntity implements Serializable{
         return id;
     }
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
     public String getCity() {
         return city;
@@ -68,5 +68,12 @@ public class AddressEntity implements Serializable{
     public void setUser(UserEntity user) {
         this.user = user;
     }
+    public String getAddressId() {
+        return addressId;
+    }
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
+    }
+    
     
 }

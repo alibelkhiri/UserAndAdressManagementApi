@@ -1,10 +1,20 @@
 package com.abscript.brightcodingspringv2.responses;
 
+import java.util.List;
+
 public class UsersResponse {
     private String userId;
     private String firstName;
     private String lastName;
     private String email;
+    private List<AddressResponse> addresses;
+    private ContactResponse contact;
+    public ContactResponse getContact() {
+        return contact;
+    }
+    public void setContact(ContactResponse contact) {
+        this.contact = contact;
+    }
     public String getUserId() {
         return userId;
     }
@@ -28,6 +38,12 @@ public class UsersResponse {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+    public List<AddressResponse> getAddresses() {
+        return addresses;
+    }
+    public void setAddresses(List<AddressResponse> addresses) {
+        this.addresses = addresses;
     }
     
 }

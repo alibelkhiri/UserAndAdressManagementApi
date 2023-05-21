@@ -10,7 +10,7 @@ public class Utils {
     private final String alphabet="AZERTYUIOPQSDFGHJKLMWXCVBNazertyuiopqsdfghjklmwxcvbn1234567890";
 
    
-    public String generateUserId(int lenght){
+    public String generateStringId(int lenght){
         StringBuilder returnValue=new StringBuilder(lenght);
         for(int i=0;i<lenght;i++){
             returnValue.append(alphabet.charAt(random.nextInt(alphabet.length())));

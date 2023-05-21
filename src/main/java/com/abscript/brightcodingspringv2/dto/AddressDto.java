@@ -1,13 +1,17 @@
 package com.abscript.brightcodingspringv2.dto;
 
-public class AddressDto {
+import java.io.Serializable;
+
+public class AddressDto implements Serializable{
     private Long Id;
+    private String addressId;
     private String city;
     private String country;
     private String street;
     private String postalCode;
     private String type;
     private UserDto user;
+    
     public Long getId() {
         return Id;
     }
@@ -49,6 +53,12 @@ public class AddressDto {
     }
     public void setUser(UserDto user) {
         this.user = user;
+    }
+    public String getAddressId() {
+        return addressId;
+    }
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
     }
     
 }

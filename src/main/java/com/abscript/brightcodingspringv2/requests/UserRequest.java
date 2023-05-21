@@ -23,6 +23,13 @@ public class UserRequest {
     @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$",message = "password doit avoir des Maj et min et numero")
     private String password;
     private List<AddressRequest> addresses;
+    private ContactRequest contact;
+    public ContactRequest getContact() {
+        return contact;
+    }
+    public void setContact(ContactRequest contact) {
+        this.contact = contact;
+    }
     public List<AddressRequest> getAddresses() {
         return addresses;
     }

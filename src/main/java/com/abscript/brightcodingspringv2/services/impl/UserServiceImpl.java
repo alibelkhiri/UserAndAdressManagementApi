@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.abscript.brightcodingspringv2.dto.AddressDto;
 import com.abscript.brightcodingspringv2.dto.UserDto;
 import com.abscript.brightcodingspringv2.entity.UserEntity;
 import com.abscript.brightcodingspringv2.exceptions.UserException;
@@ -22,6 +23,7 @@ import com.abscript.brightcodingspringv2.repository.UserRepository;
 import com.abscript.brightcodingspringv2.services.UserService;
 import com.abscript.brightcodingspringv2.shared.Utils;
 
+import ch.qos.logback.classic.pattern.Util;
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import lombok.var;
 
@@ -37,18 +39,25 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
        UserEntity foundUser= userRepository.findByEmail(userDto.getEmail());
        if(foundUser!=null) throw new RuntimeException("User alrady exists!"); 
-       UserEntity userEntity=new UserEntity();
-       ModelMapper modelMapper=new ModelMapper();
-      userEntity=modelMapper.map(foundUser, UserEntity.class);
-        //BeanUtils.copyProperties(userDto, userEntity);
+       
+       
+      for(int i=0;i<userDto.getAddresses().size();i++){
+        AddressDto addressDto=userDto.getAddresses().get(i);
+        addressDto.setUser(userDto);
+        addressDto.setAddressId(util.generateStringId(30));
+        userDto.getAddresses().set(i, addressDto);
+      }
+
+      userDto.getContact().setContactId(util.generateStringId(30));
+      userDto.getContact().setUser(userDto);
+      ModelMapper modelMapper=new ModelMapper();
+      UserEntity userEntity=modelMapper.map(userDto, UserEntity.class);
+       
         userEntity.setEncryptedPassword(userDto.getPassword());
-        userEntity.setUserId(util.generateUserId(32));
+        userEntity.setUserId(util.generateStringId(32));
 
         UserEntity createdUser=userRepository.save(userEntity);
-        
-        UserDto userDto2=new UserDto();
-        //BeanUtils.copyProperties(createdUser, userDto2);
-        userDto2=modelMapper.map(createdUser, UserDto.class);
+        UserDto userDto2=modelMapper.map(createdUser, UserDto.class);
         return userDto2;  
     }
 

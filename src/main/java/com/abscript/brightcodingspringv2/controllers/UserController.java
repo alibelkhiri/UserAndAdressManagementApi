@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ import com.abscript.brightcodingspringv2.responses.UsersResponse;
 import com.abscript.brightcodingspringv2.services.UserService;
 
 import lombok.var;
-
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -42,13 +43,14 @@ public class UserController {
         return new ResponseEntity<>(usersResponse,HttpStatus.CREATED);
     }
     @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ArrayList<UsersResponse>> getUsers(@RequestParam(value = "page",defaultValue = "1") int page,@RequestParam(value = "limit",defaultValue = "10") int limit){
+    public ResponseEntity<ArrayList<UsersResponse>> getUsers(@RequestParam(value = "page",defaultValue = "1") int page,@RequestParam(value = "limit",defaultValue = "10") int limit,@RequestParam(value = "search",defaultValue = "") String search,@RequestParam(value = "status",defaultValue = "1")int status){
         ArrayList<UsersResponse> responses=new ArrayList<>();
        
-        var usersDto=userService.getAllUsers(page,limit);
+        var usersDto=userService.getAllUsers(page,limit,search,status);
         for(UserDto user:usersDto){
             UsersResponse userResponse=new UsersResponse();
-            BeanUtils.copyProperties(user, userResponse);
+            ModelMapper modelMapper=new ModelMapper();
+            userResponse=modelMapper.map(user,UsersResponse.class);
             responses.add( userResponse);
         }
         

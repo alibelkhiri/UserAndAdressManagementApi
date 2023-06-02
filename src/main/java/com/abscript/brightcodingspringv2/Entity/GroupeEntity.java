@@ -25,7 +25,7 @@ public class GroupeEntity implements Serializable{
     @Column(name="name",length=30)
     private String name;
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinTable(name = "groups_users",joinColumns = {@JoinColumn(name="groups_id")})
+    @JoinTable(name = "groups_users",joinColumns = {@JoinColumn(name="groups_id")},inverseJoinColumns = {@JoinColumn(name="user_id")})
     private Set<UserEntity> users =new HashSet<>();
-
+    
 }

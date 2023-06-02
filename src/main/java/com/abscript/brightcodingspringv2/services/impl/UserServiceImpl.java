@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import org.apache.tomcat.jni.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,15 +78,24 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ArrayList<UserDto> getAllUsers(int page, int limit) {
+    public ArrayList<UserDto> getAllUsers(int page, int limit,String search, int status) {
       if(page>0)page-=1;
       ArrayList<UserDto> usersDto=new ArrayList<>();
       Pageable pageableRequest=PageRequest.of(page, limit);
-      Page<UserEntity> userPage=userRepository.findAll(pageableRequest);
+      Page<UserEntity> userPage;
+      if(search.isEmpty()){
+         userPage=userRepository.findAllUsers(pageableRequest);
+      }
+      else{
+        userPage=userRepository.findAllUsersByCreteria(pageableRequest,search,status);
+      }
+      
       var users=userPage.getContent();
       for(UserEntity user: users){
-        UserDto userDto=new UserDto();
-        BeanUtils.copyProperties(user, userDto);
+        
+        ModelMapper modelMapper= new ModelMapper();
+        UserDto  userDto=modelMapper.map(user,UserDto.class);
+       
         usersDto.add(userDto);
       }
       return usersDto;
